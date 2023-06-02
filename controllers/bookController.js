@@ -33,3 +33,41 @@ exports.createBook = async (req, res) => {
     res.status(500).send({ error: "Nie można utworzyć książki" });
   }
 };
+
+exports.updateBook = async (req, res) => {
+  try {
+    const { BookTitle, Author, ISBN, CategoryID } = req.body;
+    const book = await Book.update(
+      { BookTitle, Author, ISBN, CategoryID },
+      { where: { BookID: req.params.id } }
+    );
+    res.status(200).send(book);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Nie można zaktualizować książki" });
+  }
+};
+
+exports.deleteBook = async (req, res) => {
+  try {
+    await Book.destroy({ where: { BookID: req.params.id } });
+    res.status(200).send({ message: "Książka została usunięta" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Nie można usunąć książki" });
+  }
+};
+
+exports.getBook = async (req, res) => {
+  try {
+    const book = await Book.findByPk(req.params.id);
+    if (book) {
+      res.status(200).send(book);
+    } else {
+      res.status(404).send({ error: "Książka nie została znaleziona" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "Nie można pobrać informacji o książce" });
+  }
+};
