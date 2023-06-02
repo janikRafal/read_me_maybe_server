@@ -1,10 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const db = require("./config/db");
+const dotenv = require("dotenv");
+
+dotenv.config({ path: "./config.env" });
 
 const app = require("./app");
 
-// Sprawdź połączenie z bazą danych
 db.authenticate()
   .then(() => {
     console.log("Połączono z bazą danych.");

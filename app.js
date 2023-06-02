@@ -5,12 +5,12 @@ const authRouter = require("./routes/auth");
 const bookRouter = require("./routes/bookRoutes");
 const categoryRouter = require("./routes/categoryRoutes");
 
-//Middlewares
+// Middleware
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-//Routes
+// Routes
 app.use("/auth", authRouter);
 app.use("/book-list", bookRouter);
 app.use("/category-list", categoryRouter);
