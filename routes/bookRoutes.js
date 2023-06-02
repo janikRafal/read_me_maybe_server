@@ -3,6 +3,7 @@ const bookController = require("../controllers/bookController");
 
 const router = express.Router();
 
-router.route("/").get(bookController.getBooks);
+router.route("/basic").get(bookController.getBooksBasic);
+router.route("/").get(bookController.getBooks).post(bookController.createBook);
 
 module.exports = router;
