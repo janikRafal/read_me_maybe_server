@@ -17,18 +17,30 @@ exports.createCategory = async (req, res) => {
     res.status(201).send(category);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: "Nie można utworzyć kategorii" });
+    if (error.name === "SequelizeUniqueConstraintError") {
+      res.status(400).send({ error: "Kategoria o tej nazwie już istnieje" });
+    } else {
+      res.status(500).send({ error: "Nie można utworzyć kategorii" });
+    }
   }
 };
 
 exports.updateCategory = async (req, res) => {
   try {
     const { CategoryName } = req.body;
-    const category = await Category.update(
+    const updateResponse = await Category.update(
       { CategoryName },
       { where: { CategoryID: req.params.id } }
     );
-    res.status(200).send(category);
+
+    if (updateResponse[0] === 0) {
+      return res
+        .status(404)
+        .send({ error: "Nie znaleziono kategorii do aktualizacji" });
+    }
+
+    const updatedCategory = await Category.findByPk(req.params.id);
+    res.status(200).send(updatedCategory);
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: "Nie można zaktualizować kategorii" });

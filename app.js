@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 // Routes
-app.use("/auth", authRouter);
+app.use("/auth/", authRouter);
 app.use("/book-list", bookRouter);
 app.use("/category-list", categoryRouter);
 

@@ -12,13 +12,10 @@ const Book = sequelize.define(
     BookTitle: {
       type: DataTypes.STRING(255),
       allowNull: false,
+      unique: true,
     },
     Author: {
       type: DataTypes.STRING(255),
-      allowNull: false,
-    },
-    ISBN: {
-      type: DataTypes.STRING(13),
       allowNull: false,
     },
     CategoryID: {

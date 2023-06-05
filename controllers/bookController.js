@@ -25,23 +25,36 @@ exports.getBooks = async (req, res) => {
 
 exports.createBook = async (req, res) => {
   try {
-    const { BookTitle, Author, ISBN, CategoryID } = req.body;
-    const book = await Book.create({ BookTitle, Author, ISBN, CategoryID });
+    const { BookTitle, Author, CategoryID } = req.body;
+    const book = await Book.create({ BookTitle, Author, CategoryID });
     res.status(201).send(book);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: "Nie można utworzyć książki" });
+    if (error.name === "SequelizeUniqueConstraintError") {
+      res.status(400).send({ error: "Książka o tym tytule już istnieje" });
+    } else {
+      res.status(500).send({ error: "Nie można utworzyć książki" });
+    }
   }
 };
 
 exports.updateBook = async (req, res) => {
   try {
-    const { BookTitle, Author, ISBN, CategoryID } = req.body;
-    const book = await Book.update(
-      { BookTitle, Author, ISBN, CategoryID },
+    const { BookTitle, Author, CategoryID } = req.body;
+    const updateResponse = await Book.update(
+      { BookTitle, Author, CategoryID },
       { where: { BookID: req.params.id } }
     );
-    res.status(200).send(book);
+
+    if (updateResponse[0] === 0) {
+      return res
+        .status(404)
+        .send({ error: "Nie znaleziono książki do aktualizacji" });
+    }
+
+    const updatedBook = await Book.findByPk(req.params.id);
+    console.log(updatedBook);
+    res.status(200).send(updatedBook);
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: "Nie można zaktualizować książki" });
