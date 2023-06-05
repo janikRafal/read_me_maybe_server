@@ -4,16 +4,18 @@ const { authenticateJWT } = require("../middleware/auth");
 
 const router = express.Router();
 
-router.route("/basic").get(authenticateJWT, bookController.getBooksBasic);
-router
-  .route("/")
-  .get(authenticateJWT, bookController.getBooks)
-  .post(authenticateJWT, bookController.createBook);
+router.get("/", authenticateJWT, bookController.getBooks);
+router.post("/create", authenticateJWT, bookController.createBook);
 
 router
-  .route("/:id")
-  .get(authenticateJWT, bookController.getBook)
-  .patch(authenticateJWT, bookController.updateBook)
-  .delete(authenticateJWT, bookController.deleteBook);
+  .get("/:id", authenticateJWT, bookController.getBook)
+  .patch("/:id/update", authenticateJWT, bookController.updateBook)
+  .delete("/:id/delete", authenticateJWT, bookController.deleteBook);
+
+router.get(
+  "/:id/details",
+  authenticateJWT,
+  bookController.getBookWithCategoryName
+);
 
 module.exports = router;

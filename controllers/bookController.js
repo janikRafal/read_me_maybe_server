@@ -1,4 +1,5 @@
 const Book = require("../models/bookModel");
+const Category = require("../models/categoryModel");
 
 exports.getBooksBasic = async (req, res) => {
   try {
@@ -82,5 +83,36 @@ exports.getBook = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: "Nie można pobrać informacji o książce" });
+  }
+};
+
+exports.getBookWithCategoryName = async (req, res) => {
+  try {
+    const book = await Book.findByPk(req.params.id, {
+      include: [
+        {
+          model: Category,
+          attributes: ["CategoryName"],
+        },
+      ],
+    });
+
+    if (book) {
+      const bookWithCategoryName = {
+        BookID: book.BookID,
+        BookTitle: book.BookTitle,
+        Author: book.Author,
+        CategoryName: book.Category.CategoryName,
+      };
+
+      res.status(200).send(bookWithCategoryName);
+    } else {
+      res.status(404).send({ error: "Książka nie została znaleziona" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      error: "Nie można pobrać informacji o książce z nazwą kategorii",
+    });
   }
 };

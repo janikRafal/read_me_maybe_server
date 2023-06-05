@@ -4,15 +4,15 @@ const { authenticateJWT } = require("../middleware/auth");
 
 const router = express.Router();
 
-router
-  .route("/")
-  .get(authenticateJWT, categoryController.getCategories)
-  .post(authenticateJWT, categoryController.createCategory);
+router.get("/", authenticateJWT, categoryController.getCategories);
+router.post("/create", authenticateJWT, categoryController.createCategory);
 
-router
-  .route("/:id")
-  .get(authenticateJWT, categoryController.getCategory)
-  .patch(authenticateJWT, categoryController.updateCategory)
-  .delete(authenticateJWT, categoryController.deleteCategory);
+router.get("/:id", authenticateJWT, categoryController.getCategory);
+router.patch("/:id/update", authenticateJWT, categoryController.updateCategory);
+router.delete(
+  "/:id/delete",
+  authenticateJWT,
+  categoryController.deleteCategory
+);
 
 module.exports = router;
