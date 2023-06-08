@@ -1,3 +1,4 @@
+const Book = require("../models/bookModel");
 const Category = require("../models/categoryModel");
 
 exports.getCategories = async (req, res) => {
@@ -68,5 +69,40 @@ exports.getCategory = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: "Nie można pobrać informacji o kategorii" });
+  }
+};
+
+exports.getCategoriesWithBooks = async (req, res) => {
+  console.log("goownoodgasgklashgdaslghasdhgslhj");
+  try {
+    const categories = await Category.findAll({
+      include: [
+        {
+          model: Book,
+          attributes: ["BookID", "BookTitle", "Author"],
+        },
+      ],
+    });
+
+    let categoriesWithBooks = categories.map((category) => {
+      return {
+        CategoryID: category.CategoryID,
+        CategoryName: category.CategoryName,
+        Books: category.Books.map((book) => {
+          return {
+            BookID: book.BookID,
+            BookTitle: book.BookTitle,
+            Author: book.Author,
+          };
+        }),
+      };
+    });
+
+    res.status(200).send(categoriesWithBooks);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      error: "Nie można pobrać informacji o kategoriach z książkami",
+    });
   }
 };
