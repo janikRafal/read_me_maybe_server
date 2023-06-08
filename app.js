@@ -22,7 +22,9 @@ app.use("/categories", categoryRouter);
 
 // Handling urls which don't exist
 app.all("*", (req, res, next) => {
-  const err = new Error(`Can't find ${req.originalUrl} on this server!`);
+  const err = new Error(
+    `Nie można znaleźć ${req.originalUrl} na tym serwerze!`
+  );
   err.status = 404;
   next(err);
 });
@@ -32,7 +34,7 @@ app.use((err, req, res, next) => {
   res.send({
     error: {
       status: err.status || 500,
-      message: err.message || "Internal Server Error",
+      message: err.message || "Błąd wewnętrzny serwera",
     },
   });
 });
