@@ -7,7 +7,11 @@ const router = express.Router();
 router.get("/", authenticateJWT, categoryController.getCategories);
 router.post("/create", authenticateJWT, categoryController.createCategory);
 
-router.get("/with", authenticateJWT, categoryController.getCategoriesWithBooks);
+router.get(
+  "/with-books",
+  authenticateJWT,
+  categoryController.getCategoriesWithBooks
+);
 
 router.get("/:id", authenticateJWT, categoryController.getCategory);
 router.patch("/:id/update", authenticateJWT, categoryController.updateCategory);
