@@ -9,13 +9,13 @@ const app = require("./app");
 
 db.authenticate()
   .then(() => {
-    console.log("Połączono z bazą danych.");
+    console.log("Connected to the database.");
   })
   .catch((err) => {
-    console.error("Błąd połączenia z bazą danych:", err);
+    console.error("Database connection error:", err);
   });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`Serwer nasłuchuje na porcie ${port}`);
+  console.log(`Server is listening on port ${port}`);
 });

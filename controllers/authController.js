@@ -22,7 +22,7 @@ exports.register = async (req, res) => {
     res.status(201).send({ userId: user.UserID });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: "Rejestracja nie powiodła się" });
+    res.status(500).send({ error: "Registration failed" });
   }
 };
 
@@ -33,16 +33,16 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ where: { Username: username } });
 
     if (!user) {
-      return res.status(400).send({ error: "Użytkownik nie istnieje" });
+      return res.status(400).send({ error: "User does not exist" });
     }
 
     if (await bcrypt.compare(password, user.Password)) {
       const accessToken = jwt.sign({ userId: user.UserID }, SECRET_KEY);
       res.send({ accessToken });
     } else {
-      res.status(403).send({ error: "Niepoprawne hasło" });
+      res.status(403).send({ error: "Invalid password" });
     }
   } catch (error) {
-    res.status(500).send({ error: "Logowanie nie powiodło się" });
+    res.status(500).send({ error: "Login failed" });
   }
 };

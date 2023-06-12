@@ -10,7 +10,7 @@ exports.getBooksBasic = async (req, res) => {
     res.status(200).send(books);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: "Nie można pobrać książek" });
+    res.status(500).send({ error: "Cannot fetch books" });
   }
 };
 
@@ -20,7 +20,7 @@ exports.getBooks = async (req, res) => {
     res.status(200).send(books);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: "Nie można pobrać książek" });
+    res.status(500).send({ error: "Cannot fetch books" });
   }
 };
 
@@ -32,9 +32,9 @@ exports.createBook = async (req, res) => {
   } catch (error) {
     console.error(error);
     if (error.name === "SequelizeUniqueConstraintError") {
-      res.status(400).send({ error: "Książka o tym tytule już istnieje" });
+      res.status(400).send({ error: "A book with this title already exists" });
     } else {
-      res.status(500).send({ error: "Nie można utworzyć książki" });
+      res.status(500).send({ error: "Cannot create book" });
     }
   }
 };
@@ -48,27 +48,24 @@ exports.updateBook = async (req, res) => {
     );
 
     if (updateResponse[0] === 0) {
-      return res
-        .status(404)
-        .send({ error: "Nie znaleziono książki do aktualizacji" });
+      return res.status(404).send({ error: "Nothing to update" });
     }
 
     const updatedBook = await Book.findByPk(req.params.id);
-    console.log(updatedBook);
     res.status(200).send(updatedBook);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: "Nie można zaktualizować książki" });
+    res.status(500).send({ error: "Cannot update book" });
   }
 };
 
 exports.deleteBook = async (req, res) => {
   try {
     await Book.destroy({ where: { BookID: req.params.id } });
-    res.status(200).send({ message: "Książka została usunięta" });
+    res.status(200).send({ message: "Book has been deleted" });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: "Nie można usunąć książki" });
+    res.status(500).send({ error: "Cannot delete book" });
   }
 };
 
@@ -78,11 +75,11 @@ exports.getBook = async (req, res) => {
     if (book) {
       res.status(200).send(book);
     } else {
-      res.status(404).send({ error: "Książka nie została znaleziona" });
+      res.status(404).send({ error: "Book not found" });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: "Nie można pobrać informacji o książce" });
+    res.status(500).send({ error: "Cannot fetch book information" });
   }
 };
 
@@ -107,12 +104,12 @@ exports.getBookWithCategoryName = async (req, res) => {
 
       res.status(200).send(bookWithCategoryName);
     } else {
-      res.status(404).send({ error: "Książka nie została znaleziona" });
+      res.status(404).send({ error: "Book not found" });
     }
   } catch (error) {
     console.error(error);
     res.status(500).send({
-      error: "Nie można pobrać informacji o książce z nazwą kategorii",
+      error: "Cannot fetch book information with category name",
     });
   }
 };
